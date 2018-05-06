@@ -1,5 +1,12 @@
-class Solution {
+class Solution { 
+    // func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+    //     let testMatrix = [[2,5,8],[4,0,-1]]
+    //     let output = spiralOrderHelper(testMatrix, [Int](), testMatrix[0].count, testMatrix.count)
+    //     return output
+    // }
+    
     func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        if matrix.count == 0 { return [Int]() }
         return spiralOrderHelper(matrix, [Int](), matrix[0].count, matrix.count)
     }
     func spiralOrderHelper(_ matrix: [[Int]], _ arrSoFar: [Int], _ init_col_len: Int, _ init_row_len: Int) -> [Int] {
@@ -43,21 +50,25 @@ class Solution {
         matrixCopy = matrix
         
         if matrixCopy[0].count == 0 {
-            if matrixCopy[init_row_len - 1].count == 0 {
-                if matrixCopy[1].count == init_col_len - 2 {  // If the 2nd row is init_col_len - 2
-                    // print("BASE-CASE")
+            if matrixCopy.count == 1 { return matrixCopy[0] }
+            else if matrixCopy[init_row_len - 1].count == 0 {
+                if matrixCopy[1].count == init_col_len - 2 || init_col_len < 2 || init_row_len <= 2{  // If the 2nd row is init_col_len - 2
+                    print("BASE-CASE")
                     // Remove the first/last rows of matrixCopy and recurse with sprialOrderHelper
-                    // print(matrixCopy)
                     matrixCopy.remove(at: 0)
-                    matrixCopy.remove(at: init_row_len-2)
-                    // print(matrixCopy)
+                    matrixCopy.removeLast()
                     // reset init_col_len & init_row_len in spiralOrder
-                    return arrSoFar + spiralOrderHelper(matrixCopy, intArrToReturn, matrixCopy[0].count, matrixCopy.count)
+                    if matrixCopy.isEmpty {
+                        return arrSoFar
+                    } else {
+                        return arrSoFar + spiralOrderHelper(matrixCopy, intArrToReturn, matrixCopy[0].count, matrixCopy.count)
+                    }
                 } else {
-                    // print("CASE 4")
+                    print("CASE 4")
                     // first & last rows are nil => for every rows length-1, add the first element to contentSoFar (and remove it from the row)
                     intArrToReturn = arrSoFar
-                    for row in (1...(init_row_len - 2)).reversed() {
+                    let second_to_last_row_index = max(init_row_len-2,1)
+                    for row in (1...second_to_last_row_index).reversed() {
                         // print("row: \(row)")
                         intArrToReturn.append(matrixCopy[row].removeFirst())
                     }
@@ -66,7 +77,7 @@ class Solution {
                 }
             } else {
                 if matrixCopy[init_row_len - 2].count == init_col_len - 1 { // If the 2nd-to-last row is init_col_len - 1
-                    // print("CASE 2")
+                    print("CASE 2")
                     let lastRowReverse = Array(matrixCopy[init_row_len - 1].reversed())
                     matrixCopy[init_row_len - 1] = [Int]()
                     intArrToReturn = arrSoFar + lastRowReverse
@@ -74,10 +85,11 @@ class Solution {
                     // print(intArrToReturn)
                     return spiralOrderHelper(matrixCopy, intArrToReturn, init_col_len, init_row_len)
                 } else {
-                    // print("CASE 3")
+                    print("CASE 3")
                     // (for each rows == len from the top, add the last element to contentSoFar - and remove it from the row)
                     intArrToReturn = arrSoFar
-                    for row in 1...(init_row_len - 2) {    // Traverse from row 1 through max_row-1
+                    let second_to_last_row_index = max(init_row_len - 2, 1)
+                    for row in 1...second_to_last_row_index {    // Traverse from row 1 through max_row-1
                         // print(matrixCopy[row])
                         intArrToReturn.append(matrixCopy[row].popLast()!)
                         // Should be true
@@ -85,12 +97,13 @@ class Solution {
                         // print(matrixCopy[row].count == init_col_len - 1)
                         // print("ArrSoFar: \(intArrToReturn)")
                     }
+                    print(intArrToReturn)
                     return spiralOrderHelper(matrixCopy, intArrToReturn, init_col_len, init_row_len)
                 }
             }
         } else {
             if matrixCopy.count == 1 { return matrixCopy[0] }
-            // print("CASE 1")
+            print("CASE 1")
             intArrToReturn = matrixCopy[0]
             matrixCopy[0] = [Int]()
             return spiralOrderHelper(matrixCopy, intArrToReturn, init_col_len, init_row_len)
