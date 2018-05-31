@@ -19,3 +19,14 @@ class Solution:
             reversedLL=newHead
             head=head.next
         return reversedLL
+
+# Second Solution
+# Space: O(1), Time: O(n)
+def reverseList(self, head):
+    tail=prevNode=ListNode(None)
+    while head is not None:
+        tmp=head
+        head=head.next
+        tmp.next=prevNode
+        prevNode=tmp
+    return (tmp, tail)
